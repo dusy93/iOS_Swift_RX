@@ -61,9 +61,9 @@ let disposeBag = DisposeBag()
 
 viewModel.setting
 	.subscribe(onNext: { [weak self] info in
-				guard let self = self else { return }
-				self.setInfo(with: info)
-				})
+		guard let self = self else { return }
+		self.setInfo(with: info)
+	})
 	.disposed(on: disposeBag)
 ```
 

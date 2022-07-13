@@ -4,8 +4,8 @@
 let disposeBag = DisposeBag()
 
 Observable.just("Hi")
-			      .subscribe(onNext: { print($0) })
-	          .disposed(by: disposeBag)
+	.subscribe(onNext: { print($0) })
+  	.disposed(by: disposeBag)
 
 Observable.just([1, 2, 3, 4, 5], scheduler: MainScheduler.instance)
             .subscribe(onNext: { print($0) })
@@ -60,11 +60,11 @@ Observable.from(nameArray)
 let disposeBag = DisposeBag()
 
 viewModel.setting
-					.subscribe(onNext: { [weak self] info in
-							guard let self = self else { return }
-							self.setInfo(with: info)
-					})
-					.disposed(on: disposeBag)
+	.subscribe(onNext: { [weak self] info in
+				guard let self = self else { return }
+				self.setInfo(with: info)
+				})
+	.disposed(on: disposeBag)
 ```
 
  - withUnretained 사용한 코드
@@ -73,11 +73,11 @@ viewModel.setting
 let disposeBag = DisposeBag()
 
 viewModel.setting
-					.withUnretained(self)
-					.subscribe(onNext: { this, info in
-							this.setInfo(with: info)
-					})
-					.disposed(on: disposeBag)
+	.withUnretained(self)
+	.subscribe(onNext: { this, info in
+		this.setInfo(with: info)
+	})
+	.disposed(on: disposeBag)
 ```
 
 - **withLatestFrom**
@@ -85,13 +85,13 @@ viewModel.setting
 
 ```swift
 model.settings
-		.withLatestFrom(model.oldSettings) { ($0, $1) }
-		.map { new, old in
-				print("new : \(new) | old : \(old) ")
-				return new.name
-		}
-		.bind(to: model.name)
-		.disposed(by: disposeBag)
+	.withLatestFrom(model.oldSettings) { ($0, $1) }
+	.map { new, old in
+		print("new : \(new) | old : \(old) ")
+		return new.name
+	}
+	.bind(to: model.name)
+	.disposed(by: disposeBag)
 
 // model.settings의 값이 새로 들어오면 model.oldSettings의 가장 최근 값도 같이 가져감
 ```
@@ -101,14 +101,14 @@ model.settings
 
 ```swift
 textFiled.rx.text
-		.distinctUntilChanged()
+	.distinctUntilChanged()
 
 // 또는
 
 model.select
-		.distinctUntilChanged()
-		.bind(to: model.selectIndex)
-		.disposed(by: disposeBag)
+	.distinctUntilChanged()
+	.bind(to: model.selectIndex)
+	.disposed(by: disposeBag)
 ```
 
 - **distinctUntilChanged :** 중복된 값이 오면 이후 값은 무시
@@ -119,9 +119,9 @@ let disposeBag = DisposeBag()
 let numArray = [1, 1, 2, 2, 2, 3, 3, 4, 5, 5, 5, 5, 5]
 
 Observavble.from(numArray)
-							.distinctUnilChanged()
-							.subscribe(onNext: { print($0) })
-							.disposed(by: disposeBag)
+	.distinctUnilChanged()
+	.subscribe(onNext: { print($0) })
+	.disposed(by: disposeBag)
 
 // ***출력*** 
 // 1
@@ -147,22 +147,22 @@ Observavble.from(numArray)
 let disposeBag = DisposeBag()
 
 viewModel.name
-		.asDriver()
-		.drive(onNext: { [weak self] in
-				guard let self = self else { return }
-				self.event = true
-		})
-		.disposed(by: disposeBag)
+	.asDriver()
+	.drive(onNext: { [weak self] in
+		guard let self = self else { return }
+		self.event = true
+	})
+	.disposed(by: disposeBag)
 
 // 위의 코드를 drive가 아닌 subscribe으로 사용했을 때
 
 viewModel.name
-		.observeOn(MainScheduler.instance)
-		.subscribe(onNext: { [weak self] in
-				guard let self = self else { return }
-				self.event = true
-		})
-		.disposed(by: disposeBag)
+	.observeOn(MainScheduler.instance)
+	.subscribe(onNext: { [weak self] in
+		guard let self = self else { return }
+		self.event = true
+	})
+	.disposed(by: disposeBag)
 ```
 
 > **asDriver** : Subject나 relay를 drive 값을 할당해주기 위해 달아준다
@@ -174,13 +174,13 @@ viewModel.name
 > 
 > // viewModel
 > type = model.type
-> 						.asDriver(onErrorRecover: {_ in .empty()})
+> 	.asDriver(onErrorRecover: {_ in .empty()})
 > 
 > // viewController+Bind
 > viewModel.accessType
 > 		.drive{ [weak self] type in
-> 				guard let self = self else{ return }
-> 				...
+>			guard let self = self else{ return }
+> 			...
 > 		}
 > 		.disposed(by: bag)
 > ```
@@ -220,13 +220,13 @@ let AObservable = PublishSubject<Int>()
 let BObservable = PublishSubject<Int>()
 
 Observable
-		.combineLatest(AObservable, BObservable){ ($0,$1) }
-		.map{ a, b in 
-				print("a : \(a) | b : \(b)")
-				return a+b
-		}
-		.bind(to: model.sum)
-		.disposed(by: disposeBag)		
+	.combineLatest(AObservable, BObservable){ ($0,$1) }
+	.map{ a, b in 
+		print("a : \(a) | b : \(b)")
+		return a+b
+	}
+	.bind(to: model.sum)
+	.disposed(by: disposeBag)		
 ```
 
 - **Zip**
@@ -246,13 +246,13 @@ let AObservable = PublishSubject<Int>()
 let BObservable = PublishSubject<String>()
 
 Observable
-		.zip(AObservable, BObservable) { ($0, $1) }
-		.map{ a, b in
-				print("a : \(a) | b : \(b)")
-				return "\(a) : \(b)"
-		}
-		.bind(to: model.number)
-		.disposed(by: disposeBag)
+	.zip(AObservable, BObservable) { ($0, $1) }
+	.map{ a, b in
+		print("a : \(a) | b : \(b)")
+		return "\(a) : \(b)"
+	}
+	.bind(to: model.number)
+	.disposed(by: disposeBag)
 ```
 
 - **Concat**
@@ -272,9 +272,9 @@ let aArray = Observable.from([1, 2, 3, 4, 5])
 let bArray = Observable.from([6, 7, 8, 9, 10])
 
 Observable
-		.concat([aArray, bArray])
-		.subscribe(onNext: { print ($0) })
-		.disposed(by: disposeBag)
+	.concat([aArray, bArray])
+	.subscribe(onNext: { print ($0) })
+	.disposed(by: disposeBag)
 ```
 
 - **Merge**
@@ -294,9 +294,9 @@ let aArray = Observable.from([1, 2, 3, 4, 5])
 let bArray = Observable.from([6, 7, 8, 9, 10])
 
 Observable
-		.merge([aArray, bArray])
-		.subscribe(onNext: { print ($0) })
-		.disposed(by: disposeBag)
+	.merge([aArray, bArray])
+	.subscribe(onNext: { print ($0) })
+	.disposed(by: disposeBag)
 ```
 
 - **Map**
@@ -305,8 +305,8 @@ Observable
 ```swift
 let numbers = [1, 2, 3]
 let transformNum = numbers
-									.map{ $0 * 2 }
-									.map{ $0 + 1 } // 여러개의 map 이어서 사용 가능
+			.map{ $0 * 2 }
+			.map{ $0 + 1 } // 여러개의 map 이어서 사용 가능
 
 // ***출력*** 
 // 3
@@ -348,12 +348,12 @@ compactMap : nil 값을 제거해야하는 경우
 
 ```swift
 btn.rx.tap
-		.asDriver()
-		.throttle(.seconds(2))
-		.drive(onNext: { (_) in
-				self.btnEvent()
-		})
-		.disposed(by: disposeBag)
+	.asDriver()
+	.throttle(.seconds(2))
+	.drive(onNext: { (_) in
+		self.btnEvent()
+	})
+	.disposed(by: disposeBag)
 ```
 
 <aside>
@@ -377,12 +377,12 @@ event      : a——- c——- e——-
 
 ```swift
 btn.rx.tap
-		.asDriver()
-		.debounce(.seconds(2))
-		.drive(onNext: { (_) in
-				self.btnEvent()
-		})
-		.disposed(by: disposeBag)
+	.asDriver()
+	.debounce(.seconds(2))
+	.drive(onNext: { (_) in
+		self.btnEvent()
+	})
+	.disposed(by: disposeBag)
 ```
 
 <aside>
@@ -400,10 +400,10 @@ let disposeBag = DisposeBag()
 let numbers = [1, 2, 3, 4, 5, 6, 7, 8]
 
 Observable
-		.from(numbers)
-		.filter{ $0 % 3 = 0 }
-		.subscribe(onNext: { print ($0) })
-		.disposed(by: disposeBag)
+	.from(numbers)
+	.filter{ $0 % 3 = 0 }
+	.subscribe(onNext: { print ($0) })
+	.disposed(by: disposeBag)
 
 // ***출력*** 
 // 3
@@ -418,9 +418,9 @@ let disposeBag = DisposeBag()
 let numArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
 Observable.from(numArray)
-						.take(3)
-						.subscribe(onNext: { print($0) })
-						.disposed(by: disposeBag)
+	.take(3)
+	.subscribe(onNext: { print($0) })
+	.disposed(by: disposeBag)
 
 // ***출력*** 
 // 1
@@ -438,9 +438,9 @@ Observable.from(numArray)
 let disposeBag = DisposeBag()
 
 Observable.of("A", "B", "C", "D")
-			.skip(2)
-			.subscribe(onNext: { print($0) })
-			.disposed(by: disposeBag)
+	.skip(2)
+	.subscribe(onNext: { print($0) })
+	.disposed(by: disposeBag)
 
 // ***출력*** 
 // C
@@ -453,9 +453,9 @@ Observable.of("A", "B", "C", "D")
 
 ```swift
 Observable.of(2, 2, 1, 3, 4)
-		.skip(while: { $0 % 2 == 0 })
-		.subscribe(onNext: { print($0) })
-		.disposed(by: bag)
+	.skip(while: { $0 % 2 == 0 })
+	.subscribe(onNext: { print($0) })
+	.disposed(by: bag)
 
 // ***출력*** 
 // 1

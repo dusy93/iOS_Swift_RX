@@ -197,21 +197,25 @@ viewModel.name
     - buffer 크기만큼 채워져야 내보냄
 
 > **Subject** vs **Relay**
-Subject : .completed , .error 이벤트가 발생하면 subscribe가 종료됨
-Relay :  .completed , .error 이벤트를 발생하지 않고 Dispose되기 전까지 계속 작동,
-             UI Event에 사용하기 좋음
+> 
+> Subject : .completed , .error 이벤트가 발생하면 subscribe가 종료됨
+> 
+> Relay :  .completed , .error 이벤트를 발생하지 않고 Dispose되기 전까지 계속 작동,
+>              UI Event에 사용하기 좋음
+> 
 > 
 
 - **CombineLatest**
     - A, B 두개의 observable을 전달 받아 하나의 값을 받았을 때 마지막 값이 있으면 합쳐서 내보냄
     - 최대 8개까지 observable 가능
 
-<aside>
-✔️ A : 1———2——3———
-B : —a—b—————c—
-출력 : 1a—1b—2b—3b—3c
+> A : 1———2——3——— 
+> 
+> B : —a—b—————c— 
+> 
+> 출력 : 1a—1b—2b—3b—3c
+> 
 
-</aside>
 
 ```swift
 let disposeBag = DisposeBag()
@@ -232,12 +236,12 @@ Observable
 - **Zip**
     - 짝을 맞춰서 전달(중복 요소는 전달되지 않음)
 
-<aside>
-✔️ A : 1———2——3———
-B : —a—b—————c—
-출력 : 1a—2b—3c
-
-</aside>
+> A : 1———2——3———
+> 
+> B : —a—b—————c—
+> 
+> 출력 : 1a—2b—3c
+> 
 
 ```swift
 let disposeBag = DisposeBag()
@@ -258,12 +262,13 @@ Observable
 - **Concat**
     - 내부 요소들을 순차적으로 연결하여 하나의 observable로 반환
 
-<aside>
-✔️ A : 1———2——3———
-B : —a—b—————c—
-출력 : 1—2—3—a—b—c
-
-</aside>
+	
+> A : 1———2——3———
+> 
+> B : —a—b—————c—
+> 
+> 출력 : 1—2—3—a—b—c
+> 
 
 ```swift
 let disposeBag = DisposeBag()
@@ -280,12 +285,14 @@ Observable
 - **Merge**
     - 내부 요소들을 연결하여 하나의 observable로 반환, concat처럼 순서가 보장되지 않음
 
-<aside>
-✔️ A : 1———2——3———
-B : —a—b—————c—
-출력 : 1—a—b—2—3—c
 
-</aside>
+> A : 1———2——3———
+> 
+> B : —a—b—————c—
+> 
+> 출력 : 1—a—b—2—3—c
+> 
+
 
 ```swift
 let disposeBag = DisposeBag()
@@ -337,9 +344,12 @@ let numMap = numList.compactMap { Int($0) }
 ```
 
 > **Map** vs **FlatMap** vs **CompactMap**
-map : 단순히 값을 다른 값으로 변환하는 경우
-flatMap : 결과를 한 차원 아래로 평면화하는 경우
-compactMap : nil 값을 제거해야하는 경우
+> 
+> map : 단순히 값을 다른 값으로 변환하는 경우
+> 
+> flatMap : 결과를 한 차원 아래로 평면화하는 경우
+> 
+> compactMap : nil 값을 제거해야하는 경우
 > 
 
 - **Throttle**
@@ -356,20 +366,24 @@ btn.rx.tap
 	.disposed(by: disposeBag)
 ```
 
-<aside>
+```swift
 ✔️ .throttle(.seconds(2), **latest: Bool**)
-
 *- latest가 true인 경우*
-btn          : a—b—**c**—**d**—**e**—f—
-seconds : |—**1**—||—2—||—3—|
-event      : a—— b—— d—— f
+> btn: a——b——c——d——e——f——
+> 
+> sec: |——1——||——2——||——3——|
+> 
+> evt: a-———— b————- d————- f
+> 
 
 *- latest가 false인 경우*
-btn          : a—b—**c**—**d**—**e**—f—
-seconds : |—**1**—||—2—||—3—|
-event      : a——- c——- e——-
-
-</aside>
+> btn: a——b——c——d——e——f——
+> 
+> sec: |——1——||——2——||——3——|
+> 
+> evt: a-———— c————- e————- 
+> 
+```
 
 - **Debounce**
     - 입력 시 특정 시간동안 대기 후 값이 보내짐
@@ -385,12 +399,12 @@ btn.rx.tap
 	.disposed(by: disposeBag)
 ```
 
-<aside>
-✔️ btn          : a——b——**c**——**d**——**e**——f——
-seconds : |——**1**——||——2——||——3——|
-event      :  -———— b———— d————  f
-
-</aside>
+> btn: a——b——c——d——e——f——
+> 
+> sec: |——1——||——2——||——3——|
+> 
+> evt:  -———— b———— d————  f
+> 
 
 - **Filter**
     - 해당 조건에 만족하는 요소들만 이벤트로 전달

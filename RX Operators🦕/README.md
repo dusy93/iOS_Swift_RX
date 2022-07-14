@@ -369,20 +369,14 @@ btn.rx.tap
 ```swift
 ✔️ .throttle(.seconds(2), **latest: Bool**)
 *- latest가 true인 경우*
-> btn: a——b——c——d——e——f——
-> 
-> sec: |——1——||——2——||——3——|
-> 
-> evt: a-———— b————- d————- f
-> 
+btn: a——b——c——d——e——f——
+sec: |——1——||——2——||——3——|
+evt: a-———— b————- d————- f 
 
 *- latest가 false인 경우*
-> btn: a——b——c——d——e——f——
-> 
-> sec: |——1——||——2——||——3——|
-> 
-> evt: a-———— c————- e————- 
-> 
+btn: a——b——c——d——e——f——
+sec: |——1——||——2——||——3——|
+evt: a-———— c————- e————- 
 ```
 
 - **Debounce**
